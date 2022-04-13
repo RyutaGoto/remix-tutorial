@@ -13,6 +13,8 @@ import { db } from "~/utils/db.server";
 import { login } from "~/utils/session.server";
 import stylesUrl from "~/styles/login.css";
 
+import { createUserSession } from "~/utils/session.server";
+
 export const links: LinksFunction = () => {
   return [{ rel: "stylesheet", href: stylesUrl }];
 };
@@ -96,10 +98,7 @@ export const action: ActionFunction = async ({
           formError: `Username/Password combination is incorrect`,
         });
       }
-      return badRequest({
-        fields,
-        formError: "Not implemented",
-      });
+      return createUserSession(user.id, redirectTo);
     }
     case "register": {
       const userExists = await db.user.findFirst({
